@@ -29,7 +29,7 @@ CLASS zcl_ss_awd_demo IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    path = zcl_ss_awd_helper=>format_path( request->get_header_field( '~path_info' ) ).
+    path = zcl_ss_awd_helper=>format_path( path ).
     TRY.
         CALL METHOD me->(path).
       CATCH cx_sy_dyn_call_illegal_method.
