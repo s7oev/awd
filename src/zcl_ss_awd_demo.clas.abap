@@ -49,8 +49,16 @@ CLASS zcl_ss_awd_demo IMPLEMENTATION.
 
 
   METHOD add.
+    DATA html TYPE string.
+
     IF request->get_form_field( 'execute' ) = abap_true.
-      response->set_text( zcl_ss_awd_helper=>get_page_html( 'executed_add' ) ).
+      html = zcl_ss_awd_helper=>get_page_html( 'executed_add' ).
+
+      html = zcl_ss_awd_helper=>render_html( html = html var_and_content_tab = VALUE #(
+        ( variable = 'response_title' content = 'Testing rendering... (response_title)' )
+        ( variable = 'response_body' content = 'Testing rendering... (response_content)' )  ) ).
+
+      response->set_text( html ).
     ELSE.
       response->set_text( zcl_ss_awd_helper=>get_page_html( 'add' ) ).
     ENDIF.
