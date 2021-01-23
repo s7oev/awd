@@ -49,14 +49,24 @@ CLASS zcl_ss_awd_demo IMPLEMENTATION.
 
 
   METHOD add.
-    DATA html TYPE string.
-
     IF request->get_form_field( 'execute' ) = abap_true.
-      html = zcl_ss_awd_helper=>get_page_html( 'executed_add' ).
+      " add the movie
+      DATA(subrc) = zcl_ss_awd_movies=>create( name = request->get_form_field( 'name' )
+        year = CONV #( request->get_form_field( 'year' ) ) ).
+
+      " prepare response based on subrc
+      DATA(response_title) = SWITCH #( subrc WHEN 0 THEN |Successfully added movie { request->get_form_field( 'name' ) }|
+        ELSE |Sorry, we could not add the movie...| ).
+
+      DATA(response_content) = SWITCH #( subrc WHEN 0 THEN |Thank you for extending our movie database!|
+        ELSE |...because we already have it in our database!| ).
+
+      " return the dynamically rendered HTML response
+      DATA(html) = zcl_ss_awd_helper=>get_page_html( 'executed_add' ).
 
       html = zcl_ss_awd_helper=>render_html( html = html var_and_content_tab = VALUE #(
-        ( variable = 'response_title' content = 'Testing rendering... (response_title)' )
-        ( variable = 'response_body' content = 'Testing rendering... (response_content)' )  ) ).
+        ( variable = 'response_title' content = response_title )
+        ( variable = 'response_body'  content = response_content ) ) ).
 
       response->set_text( html ).
     ELSE.
