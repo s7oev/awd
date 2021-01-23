@@ -8,9 +8,10 @@ CLASS zcl_ss_awd_demo DEFINITION PUBLIC CREATE PUBLIC.
       request  TYPE REF TO if_web_http_request,
       response TYPE REF TO if_web_http_response.
 
-
     METHODS:
-      hey.
+      home,
+      browse,
+      add.
 ENDCLASS.
 
 
@@ -23,16 +24,30 @@ CLASS zcl_ss_awd_demo IMPLEMENTATION.
     DATA(path) = request->get_header_field( '~path_info' ).
 
     IF strlen( path ) EQ 0.
+      home(  ).
       RETURN.
     ENDIF.
 
     path = zcl_ss_awd_helper=>format_path( request->get_header_field( '~path_info' ) ).
-
     CALL METHOD me->(path).
   ENDMETHOD.
 
 
-  METHOD hey.
-    response->set_text( zcl_ss_awd_helper=>get_page_html( 'hey' ) ).
+  METHOD home.
+    response->set_text( zcl_ss_awd_helper=>get_page_html( 'index' ) ).
+  ENDMETHOD.
+
+
+  METHOD browse.
+    response->set_text( zcl_ss_awd_helper=>get_page_html( 'browse' ) ).
+  ENDMETHOD.
+
+
+  METHOD add.
+    IF request->get_form_field( 'execute' ) = abap_true.
+      response->set_text( zcl_ss_awd_helper=>get_page_html( 'executed_add' ) ).
+    ELSE.
+      response->set_text( zcl_ss_awd_helper=>get_page_html( 'add' ) ).
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

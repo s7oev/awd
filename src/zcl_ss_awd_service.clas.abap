@@ -36,6 +36,10 @@ CLASS zcl_ss_awd_service IMPLEMENTATION.
       response_code_and_value = create( request->get_text(  ) ).
     ELSEIF method = 'GET'.
       response_code_and_value = read( ).
+    ELSEIF method = 'PUT'.
+      response_code_and_value = update( request->get_text(  ) ).
+    ELSEIF method = 'DELETE'.
+      response_code_and_value = delete( request->get_text(  ) ).
     ENDIF.
 
     response->set_status( response_code_and_value-code ).
