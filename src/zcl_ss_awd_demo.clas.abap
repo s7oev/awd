@@ -11,7 +11,8 @@ CLASS zcl_ss_awd_demo DEFINITION PUBLIC CREATE PUBLIC.
     METHODS:
       home,
       browse,
-      add.
+      add,
+      not_found_404.
 ENDCLASS.
 
 
@@ -29,7 +30,11 @@ CLASS zcl_ss_awd_demo IMPLEMENTATION.
     ENDIF.
 
     path = zcl_ss_awd_helper=>format_path( request->get_header_field( '~path_info' ) ).
-    CALL METHOD me->(path).
+    TRY.
+        CALL METHOD me->(path).
+      CATCH cx_sy_dyn_call_illegal_method.
+        not_found_404(  ).
+    ENDTRY.
   ENDMETHOD.
 
 
@@ -49,5 +54,10 @@ CLASS zcl_ss_awd_demo IMPLEMENTATION.
     ELSE.
       response->set_text( zcl_ss_awd_helper=>get_page_html( 'add' ) ).
     ENDIF.
+  ENDMETHOD.
+
+
+  METHOD not_found_404.
+    response->set_text( zcl_ss_awd_helper=>get_page_html( '404' ) ).
   ENDMETHOD.
 ENDCLASS.
