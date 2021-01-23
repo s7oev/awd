@@ -44,7 +44,13 @@ CLASS zcl_ss_awd_demo IMPLEMENTATION.
 
 
   METHOD browse.
-    response->set_text( zcl_ss_awd_helper=>get_page_html( 'browse' ) ).
+    DATA(movies) = zcl_ss_awd_movies=>read_all(  ).
+
+    DATA(html) = zcl_ss_awd_helper=>render_html(
+     html = zcl_ss_awd_helper=>get_page_html( 'browse' ) var_and_content_tab = VALUE #(
+     ( variable = 'movies' content = zcl_ss_awd_movies=>itab_to_html_tab( movies ) ) ) ).
+
+    response->set_text( html ).
   ENDMETHOD.
 
 

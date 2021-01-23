@@ -10,7 +10,11 @@ CLASS zcl_ss_awd_movies DEFINITION PUBLIC FINAL CREATE PUBLIC.
         RETURNING VALUE(result) TYPE sy-subrc,
 
       read_all
-        RETURNING VALUE(result) TYPE movies_tt.
+        RETURNING VALUE(result) TYPE movies_tt,
+
+      itab_to_html_tab
+        IMPORTING movies        TYPE zcl_ss_awd_movies=>movies_tt
+        RETURNING VALUE(result) TYPE string.
 
 ENDCLASS.
 
@@ -30,5 +34,16 @@ CLASS zcl_ss_awd_movies IMPLEMENTATION.
     SELECT *
       FROM zss_awd_movies
       INTO TABLE @result.
+  ENDMETHOD.
+
+
+  METHOD itab_to_html_tab.
+    result = |<ul>|.
+
+    LOOP AT movies REFERENCE INTO DATA(movie).
+      result &&= |<li>{ movie->name } ({ movie->year_ })</li>|.
+    ENDLOOP.
+
+    result &&= |</ul>|.
   ENDMETHOD.
 ENDCLASS.

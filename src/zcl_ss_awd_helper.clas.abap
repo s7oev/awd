@@ -21,8 +21,6 @@ CLASS zcl_ss_awd_helper DEFINITION PUBLIC FINAL CREATE PUBLIC.
         IMPORTING html                TYPE string
                   var_and_content_tab TYPE var_and_content_tt
         RETURNING VALUE(result)       TYPE string.
-  PROTECTED SECTION.
-  PRIVATE SECTION.
 ENDCLASS.
 
 
